@@ -306,7 +306,8 @@ abstract class AbstractTableGateway implements TableGatewayInterface
 
         $statement = $this->sql->prepareStatementForSqlObject($insert);
         $result = $statement->execute();
-        $this->lastInsertValue = $this->adapter->getDriver()->getConnection()->getLastGeneratedValue();
+        //add table identifier to scope for lastGenerated value - so we limit scope for ID's
+        $this->lastInsertValue = $this->adapter->getDriver()->getConnection()->getLastGeneratedValue($insertState['table']);
 
         // apply postInsert features
         $this->featureSet->apply(EventFeatureEventsInterface::EVENT_POST_INSERT, [$statement, $result]);
